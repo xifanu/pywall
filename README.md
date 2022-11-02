@@ -32,12 +32,13 @@ pip3 -V
 ## 安装本程序 pyfw
 
 ```
-mkdir /usr/pywall && cd /usr/pywall
+cd /usr
 ```
 
 ```
-# 直接ftp传输代码
-# 代码位置及层级示例： /usr/pywall/app.py
+git clone https://github.com/xifanu/pywall.git
+
+cd /usr/pywall
 ```
 
 ## 安装依赖
