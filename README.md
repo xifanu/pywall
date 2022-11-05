@@ -73,14 +73,12 @@ apt install git curl wget
 git clone https://github.com/xifanu/pywall.git
 
 cd /usr/pywall
-```
 
-## 安装依赖
-
-```
 chmod +x *.py
 chmod +x *.sh
 ```
+
+## 安装依赖
 
 ```
 pip3 install -r requirements.txt
@@ -89,6 +87,7 @@ pip3 install -r requirements.txt
 ## 临时启动
 
 ```
+# 临时启动验证，有 warning 警告没关系，程序正常运行即可。
 python3 app.py
 ```
 
