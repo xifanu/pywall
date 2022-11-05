@@ -20,4 +20,6 @@ iptables -A INPUT -s 1.0.0.3 -j ACCEPT
 iptables -P INPUT DROP
 #配置写入文件
 modprobe ip_tables
-iptables-save > /etc/iptables.up.rules
+iptables-save
+netfilter-persistent save
+netfilter-persistent reload
