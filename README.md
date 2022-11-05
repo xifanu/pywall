@@ -1,14 +1,18 @@
-# pywall
+# What's the pywall ?
 
+python 简易防火墙管理程序：pywall
+
+默认端口：**9950**
+
+默认地址：http://**IP**:**PORT**:9950
 
 ![Default index](screen/index.jpg) 
 
-
-python3 iptables 防火墙管理
-
-- python 要求 3.6+
+## pywall 安装过程
 
 下面以 Debian 10、11 举例。
+
+- python 要求 3.6+
 
 ```
 apt update
@@ -39,6 +43,8 @@ apt-get purge ufw
 # 安装或升级 iptables
 apt-get install iptables -y
 apt-get install iptables-persistent -y
+
+# 如果有警告窗口，选择 Yes 即可
 
 
 # 部分debian系统需要切换 iptables 版本
