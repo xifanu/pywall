@@ -8,9 +8,9 @@ python 简易防火墙管理程序：pywall
 
 ![Default index](screen/index.jpg) 
 
-## pywall 安装过程
+## Debian 10 11 安装 pywall 过程
 
-下面以 Debian 10、11 举例。
+下面以 Debian 10、11 举例：
 
 - python 要求 3.6+
 
