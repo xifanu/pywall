@@ -45,9 +45,14 @@ apt-get install iptables -y
 apt-get install iptables-persistent -y
 
 # 如果有警告窗口，选择 Yes 即可
+```
 
 
-# 部分debian系统需要切换 iptables 版本
+### 防火墙初始化脚本 ipt.sh ，执行出现报错，看这里
+
+```
+# 部分debian系统需要切换 iptables 版本，不然 netfilter-persistent save和netfilter-persistent reload执行报错
+# 如果遇到 ipt.sh 执行报错，就需要切换 iptables 的版本
 # iptables-nft和iptables-legacy这两个iptables使用了不同的内核模块
 # 输入下面命令，准备切换 iptables 版本
 update-alternatives --config iptables
