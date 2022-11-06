@@ -48,30 +48,6 @@ apt-get install iptables-persistent -y
 ```
 
 
-### 防火墙初始化脚本 ipt.sh ，执行出现报错，看这里
-
-```
-# 部分debian系统需要切换 iptables 版本，不然 netfilter-persistent save和netfilter-persistent reload执行报错
-# 如果遇到 ipt.sh 执行报错，就需要切换 iptables 的版本
-# iptables-nft和iptables-legacy这两个iptables使用了不同的内核模块
-# 输入下面命令，准备切换 iptables 版本
-update-alternatives --config iptables
-
-
-# 屏幕打印出以下内容：
-  Selection    Path                       Priority   Status
-------------------------------------------------------------
-* 0            /usr/sbin/iptables-nft      20        auto mode
-  1            /usr/sbin/iptables-legacy   10        manual mode
-  2            /usr/sbin/iptables-nft      20        manual mode
-
-# 上面 星号 默认选择的 iptables-nft 版本，我们准备使用 iptables-legacy 版本。
-# 找到 /usr/sbin/iptables-legacy 输入对应的数字： 1
-
-# 设置成功后，屏幕输出以下内容：
-# update-alternatives: using /usr/sbin/iptables-legacy to provide /usr/sbin/iptables (iptables) in manual mode
-```
-
 ## 安装本程序 pyfw
 
 ```
@@ -135,4 +111,35 @@ WantedBy=multi-user.target
 systemctl daemon-reload
 
 systemctl enable pywall
+```
+
+
+
+**附**  
+防火墙白名单规则初始化，执行： 
+```
+bash /usr/pywall/ipt.sh
+```
+
+如果执行出现报错，看下面： 
+```
+# 部分debian系统需要切换 iptables 版本，不然 netfilter-persistent save和netfilter-persistent reload执行报错
+# 如果遇到 ipt.sh 执行报错，就需要切换 iptables 的版本
+# iptables-nft和iptables-legacy这两个iptables使用了不同的内核模块
+# 输入下面命令，准备切换 iptables 版本
+update-alternatives --config iptables
+
+
+# 屏幕打印出以下内容：
+  Selection    Path                       Priority   Status
+------------------------------------------------------------
+* 0            /usr/sbin/iptables-nft      20        auto mode
+  1            /usr/sbin/iptables-legacy   10        manual mode
+  2            /usr/sbin/iptables-nft      20        manual mode
+
+# 上面 星号 默认选择的 iptables-nft 版本，我们准备使用 iptables-legacy 版本。
+# 找到 /usr/sbin/iptables-legacy 输入对应的数字： 1
+
+# 设置成功后，屏幕输出以下内容：
+# update-alternatives: using /usr/sbin/iptables-legacy to provide /usr/sbin/iptables (iptables) in manual mode
 ```
