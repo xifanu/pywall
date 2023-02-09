@@ -16,7 +16,7 @@ ip_dict = {'8.8.8.8':'美国', '1.2.3.4':'美国'}
 ips_dama = {}
 
 # 写入文件 ip_dict
-def wd_ips():
+def wd_init_ips():
     with open('/usr/pywall/ip_dict','wb') as ips_file:
         pickle.dump(ip_dict, ips_file)
     ips_file.close()
@@ -76,13 +76,12 @@ def create():
             return redirect(url_for('home'))
     return redirect(url_for('home'))
 
-@app.route('/initIPRule')
+@app.route('/initIP')
 def initIPRule():
+    # 初始化 iptables rule
     start_runner()
-    clientips = Clientip.query.all()
-    for clientip in clientips:
-        db.session.delete(clientip);
-    db.session.commit()
+    # 初始化 ips
+    wd_init_ips()
     return redirect(url_for('home'))
 
 def iptables_A( cip ):
