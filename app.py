@@ -6,6 +6,7 @@ import os
 import threading
 import geoip2.database
 import pickle
+from gevent import pywsgi
 
 
 app = Flask(__name__)
@@ -110,4 +111,6 @@ def ipcountry(userip):
 
 if __name__ == '__main__':
     # start_runner()
-    app.run(debug=False,host='0.0.0.0',port=9950)
+    # app.run(debug=False,host='0.0.0.0',port=9950)
+    server = pywsgi.WSGIServer(('0.0.0.0', 9950), app)
+    server.serve_forever()
