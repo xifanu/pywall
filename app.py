@@ -16,13 +16,13 @@ ips_dama = {}
 
 # 写入文件 ip_dict
 def wd_ips():
-    with open('./ip_dict','wb') as ips_file:
+    with open('/usr/pywall/ip_dict','wb') as ips_file:
         pickle.dump(ip_dict, ips_file)
     ips_file.close()
 
 # 写入文件 ip_dict
 def wd_ips(cips):
-    with open('./ip_dict','wb') as ips_file:
+    with open('/usr/pywall/ip_dict','wb') as ips_file:
         pickle.dump(cips, ips_file)
     ips_file.close()
 
