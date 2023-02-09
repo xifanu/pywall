@@ -110,7 +110,16 @@ WantedBy=multi-user.target
 ```
 systemctl daemon-reload
 
+# 开机自启
 systemctl enable pywall
+# 启动 pywall
+systemctl start pywall
+# 停止 pywall
+systemctl stop pywall
+# 重启 pywall
+systemctl restart pywall
+# 查看 pywall 运行状态
+systemctl status pywall
 ```
 
 **附言**  
@@ -254,7 +263,16 @@ WantedBy=multi-user.target
 ```
 systemctl daemon-reload
 
+# 开机自启
 systemctl enable pywall
+# 启动 pywall
+systemctl start pywall
+# 停止 pywall
+systemctl stop pywall
+# 重启 pywall
+systemctl restart pywall
+# 查看 pywall 运行状态
+systemctl status pywall
 ```
 　
 **附言**  
