@@ -115,13 +115,6 @@ systemctl daemon-reload
 
 systemctl enable pywall
 ```
-　
- 　
-  　
-   　
-    　 
-　
-　
 
 **附言**  
 防火墙白名单规则初始化，执行： 
@@ -269,4 +262,8 @@ systemctl daemon-reload
 systemctl enable pywall
 ```
 　
- 　
+**附言**  
+防火墙白名单规则初始化，执行： 
+```
+bash /usr/pywall/ipt.sh
+```
