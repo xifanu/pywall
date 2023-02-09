@@ -28,7 +28,7 @@ def wd_ips(cips):
 
 # 读取文件 ip_dict
 def read_ips():
-    with open('./ip_dict','rb') as ips_file:
+    with open('/usr/pywall/ip_dict','rb') as ips_file:
         ips = pickle.load(ips_file)
         ips_file.close()
         return ips
