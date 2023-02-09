@@ -11,7 +11,7 @@ python 简易防火墙管理程序：pywall
 
 ## Debian 10 11 安装 pywall 过程
 
-（CentOS7教程在后面）
+[CentOS 7 教程点我](#CentOS 7 安装 pywall 过程)
 
 Debian 10、11 安装过程：
 
