@@ -1,45 +1,53 @@
 from flask import Flask, render_template, request, url_for, redirect
-from flask_sqlalchemy import SQLAlchemy
 import re
 import subprocess
 import time
 import os
 import threading
 import geoip2.database
+import pickle
+
 
 app = Flask(__name__)
 
-# windows 绝对路径：E:\pythonProject\pywall\db\my.db
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///E:\\pythonProject\\pywall\\db\\my.db'
+# 初始化客户端的 ips 对象
+ip_dict = {'8.8.8.8':'美国', '1.2.3.4':'美国'}
+ips_dama = {}
 
-# windows 相对路径：instance\mydb
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///my.db'
+# 写入文件 ip_dict
+def wd_ips():
+    with open('./ip_dict','wb') as ips_file:
+        pickle.dump(ip_dict, ips_file)
+    ips_file.close()
 
-# Linux 绝对路径：/usr/pywall/db/myy.db
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////usr/pywall/db/my.db'
+# 写入文件 ip_dict
+def wd_ips(cips):
+    with open('./ip_dict','wb') as ips_file:
+        pickle.dump(cips, ips_file)
+    ips_file.close()
 
-db = SQLAlchemy(app)
+# 读取文件 ip_dict
+def read_ips():
+    with open('./ip_dict','rb') as ips_file:
+        ips = pickle.load(ips_file)
+        ips_file.close()
+        return ips
 
-class Clientip(db.Model):
-    ip = db.Column(db.Integer, primary_key=True)
-    memo = db.Column(db.String(200))
-
-#IP 打码
+# IP 打码
 def ipdama(strip):
     newstr = re.sub(r'(?!\d{1,3}\.\d{1,3}\.)\d', '*', strip)
     return newstr
 
 @app.route('/')
 def home():
+    ips_dama.clear()
     userip = request.remote_addr
     country = ipcountry(userip)
-    clientips = Clientip.query.all()
-    for clientip in clientips:
-        ipxx = ipdama(clientip.ip)
-        clientip.ip = ipxx
-        if clientip.memo is None:
-            clientip.memo = '未知'
-    return render_template('index.html', clientips = clientips, userip = userip, country = country)
+    clientips_dict = read_ips()
+    for cip, cipcountry in clientips_dict.items():
+        ipxx = ipdama(cip)
+        ips_dama[ipxx] = cipcountry
+    return render_template('index.html', ips_dama = ips_dama, userip = userip, country = country)
 
 @app.route('/add', methods=['GET'])
 def tohome():
@@ -49,18 +57,21 @@ def tohome():
 def create():
     userip = request.form['cadd']
     country = ipcountry(userip)
-    new_ip_model = Clientip(ip=userip, memo = country)
+    user_dict = {}
+    user_dict[userip] = country
+    clientips_dict = read_ips()
     if re.match(r'^([1-9]|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])(\.(\d|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])){3}$', userip):
-        db_clientip = Clientip.query.get(userip)
-        if db_clientip and len(db_clientip.ip) > 0:
-            #已存在
+        # 判断 userip 是否存在于 clientips_dict
+        if userip in clientips_dict:
+            # 已存在
             iptables_A(userip)
             return redirect(url_for('home'))
         else:
-            #不存在
+            # 不存在
             iptables_A(userip)
-            db.session.add(new_ip_model)
-            db.session.commit()
+            # 写入文件 ip_dict
+            clientips_dict[userip] = country
+            wd_ips(clientips_dict)
             return redirect(url_for('home'))
     return redirect(url_for('home'))
 
@@ -90,7 +101,7 @@ def start_runner():
     ret1.wait(3)
 
 def ipcountry(userip):
-    with geoip2.database.Reader('/usr/pywall/GeoLite2-Country.mmdb') as reader:
+    with geoip2.database.Reader('./GeoLite2-Country.mmdb') as reader:
         try:
             response = reader.country(userip)
             return response.country.names['zh-CN']

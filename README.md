@@ -8,9 +8,12 @@ python 简易防火墙管理程序：pywall
 
 ![Default index](screen/index.jpg) 
 
+
 ## Debian 10 11 安装 pywall 过程
 
-下面以 Debian 10、11 举例：
+（CentOS7教程在后面）
+
+Debian 10、11 安装过程：
 
 - python 要求 3.6+
 
@@ -148,3 +151,122 @@ update-alternatives --config iptables
 # 设置成功后，屏幕输出以下内容：
 # update-alternatives: using /usr/sbin/iptables-legacy to provide /usr/sbin/iptables (iptables) in manual mode
 ```
+
+## CentOS 7 安装 pywall 过程
+
+CentOS 7 安装 pywall 过程：
+
+```
+yum update
+```
+
+卸载 firewalld ，直接使用 iptables
+
+```
+systemctl disable firewalld
+systemctl stop firewalld
+systemctl mask firewalld
+systemctl disable firewalld.service
+```
+
+安装 iptables 及 iptables服务
+
+```
+yum install iptables -y
+yum install iptables-services -y
+systemctl enable iptables.service
+systemctl restart iptables.service
+```
+
+- 安装 python3 要求 3.6+
+
+（CentOS 7 编译安装 python3 很慢，这里不介绍了）
+
+CentOS 7 使用 rpm 包，直接安装 python3 ，需要启用较新的 repo 库：
+
+```
+# 启用较新的 repo 库
+yum install https://repo.ius.io/ius-release-el$(rpm -E '%{rhel}').rpm
+
+# 安装 python3
+yum install python3 -y
+
+# 升级 pip3
+pip3 install --upgrade pip
+```
+
+验证安装情况
+
+```
+python3 -V
+
+pip3 -V
+```
+
+
+## 安装本程序 pyfw
+
+```
+cd /usr
+```
+
+```
+apt install git curl wget
+
+git clone https://github.com/xifanu/pywall.git
+
+cd /usr/pywall
+
+chmod +x *.py
+chmod +x *.sh
+```
+
+## 安装依赖
+
+```
+pip3 install -r requirements.txt
+```
+
+## 临时启动
+
+```
+# 临时启动验证，有 warning 警告没关系，程序正常运行即可。
+python3 app.py
+```
+
+## 开机自启
+
+注册 systemd 服务
+
+```
+cd /etc/systemd/system
+
+vi pywall.service
+```
+
+复制粘贴以下内容
+
+```
+[Unit]
+Description=My Pywall
+After=syslog.target network.target nss-lookup.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 /usr/pywall/app.py
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target
+```
+
+使其生效
+
+```
+systemctl daemon-reload
+
+systemctl enable pywall
+```
+　
+ 　

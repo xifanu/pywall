@@ -41,8 +41,8 @@
                     </div>
                     <div class="card-body" style="height:60vh;overflow:auto;" >
 
-                            {% for clientip in clientips %}
-                                <p>{{clientip.ip}}　　{{clientip.memo}}</p>
+                            {% for cip_dama, cipcountry in ips_dama.items() %}
+                                <p>{{cip_dama}}　　{{cipcountry}}</p>
                             
                             {% endfor %}
                         
