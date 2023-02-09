@@ -101,7 +101,7 @@ def start_runner():
     ret1.wait(3)
 
 def ipcountry(userip):
-    with geoip2.database.Reader('./GeoLite2-Country.mmdb') as reader:
+    with geoip2.database.Reader('/usr/pywall/GeoLite2-Country.mmdb') as reader:
         try:
             response = reader.country(userip)
             return response.country.names['zh-CN']

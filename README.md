@@ -57,13 +57,9 @@ pip3 -V
 ### 安装本程序 pywall
 
 ```
-cd /usr
-```
-
-```
 apt install git curl wget
 
-git clone https://github.com/xifanu/pywall.git
+cd /usr && git clone https://github.com/xifanu/pywall.git
 
 cd /usr/pywall
 
@@ -89,9 +85,7 @@ python3 app.py
 注册 systemd 服务
 
 ```
-cd /etc/systemd/system
-
-vi pywall.service
+cd /etc/systemd/system && vi pywall.service
 ```
 
 复制粘贴以下内容
@@ -207,13 +201,9 @@ pip3 -V
 ### 安装本程序 pywall
 
 ```
-cd /usr
-```
-
-```
 apt install git curl wget
 
-git clone https://github.com/xifanu/pywall.git
+cd /usr && git clone https://github.com/xifanu/pywall.git
 
 cd /usr/pywall
 
@@ -239,9 +229,7 @@ python3 app.py
 注册 systemd 服务
 
 ```
-cd /etc/systemd/system
-
-vi pywall.service
+cd /etc/systemd/system && vi pywall.service
 ```
 
 复制粘贴以下内容
