@@ -13,9 +13,24 @@ python 简易防火墙管理程序：pywall
 
 [CentOS 7 教程点我](#CentOS-7-安装-pywall-过程)
 
-
-
 Debian 10、11 安装过程：
+
+### 处理防火墙
+
+```
+# 卸载 ufw，不使用ufw
+ufw disable
+apt-get remove ufw
+apt-get purge ufw
+
+# 安装或升级 iptables
+apt-get install iptables -y
+apt-get install iptables-persistent -y
+
+# 如果有警告窗口，选择 Yes 即可
+```
+
+### 安装 python3
 
 - python 要求 3.6+
 
@@ -38,22 +53,8 @@ python3 -V
 pip3 -V
 ```
 
-## 安装防火墙
-```
-# 卸载 ufw，不使用ufw
-ufw disable
-apt-get remove ufw
-apt-get purge ufw
 
-# 安装或升级 iptables
-apt-get install iptables -y
-apt-get install iptables-persistent -y
-
-# 如果有警告窗口，选择 Yes 即可
-```
-
-
-## 安装本程序 pyfw
+### 安装本程序 pywall
 
 ```
 cd /usr
@@ -70,20 +71,20 @@ chmod +x *.py
 chmod +x *.sh
 ```
 
-## 安装依赖
+### 安装依赖
 
 ```
 pip3 install -r requirements.txt
 ```
 
-## 临时启动
+### 临时启动
 
 ```
 # 临时启动验证，有 warning 警告没关系，程序正常运行即可。
 python3 app.py
 ```
 
-## 开机自启
+### 开机自启
 
 注册 systemd 服务
 
@@ -151,6 +152,8 @@ update-alternatives --config iptables
 
 CentOS 7 安装 pywall 过程：
 
+### 处理防火墙
+
 ```
 yum update
 ```
@@ -172,6 +175,8 @@ yum install iptables-services -y
 systemctl enable iptables.service
 systemctl restart iptables.service
 ```
+
+### 安装 python3
 
 - 安装 python3 要求 3.6+
 
@@ -199,7 +204,7 @@ pip3 -V
 ```
 
 
-## 安装本程序 pyfw
+### 安装本程序 pywall
 
 ```
 cd /usr
@@ -216,20 +221,20 @@ chmod +x *.py
 chmod +x *.sh
 ```
 
-## 安装依赖
+### 安装依赖
 
 ```
 pip3 install -r requirements.txt
 ```
 
-## 临时启动
+### 临时启动
 
 ```
 # 临时启动验证，有 warning 警告没关系，程序正常运行即可。
 python3 app.py
 ```
 
-## 开机自启
+### 开机自启
 
 注册 systemd 服务
 
