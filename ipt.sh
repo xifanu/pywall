@@ -1,4 +1,4 @@
-# Debian
+# Debian 、Ubuntu
 iptables -F INPUT
 # iptables -X INPUT
 iptables -Z INPUT
