@@ -57,7 +57,7 @@ pip3 -V
 ### 安装本程序 pywall
 
 ```
-apt install git curl wget
+apt install git curl wget -y
 
 cd /usr && git clone https://github.com/xifanu/pywall.git
 
@@ -210,7 +210,7 @@ pip3 -V
 ### 安装本程序 pywall
 
 ```
-apt install git curl wget
+yum install git curl wget -y
 
 cd /usr && git clone https://github.com/xifanu/pywall.git
 
