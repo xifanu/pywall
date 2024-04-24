@@ -1,3 +1,4 @@
 flask
 geoip2
 gevent
+flask_basicauth

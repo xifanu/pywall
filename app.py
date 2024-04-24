@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, url_for, redirect
+from flask_basicauth import BasicAuth
 import re
 import subprocess
 import time
@@ -8,8 +9,13 @@ import geoip2.database
 import pickle
 from gevent import pywsgi
 
-
 app = Flask(__name__)
+
+app.config['BASIC_AUTH_USERNAME'] = 'admin'
+app.config['BASIC_AUTH_PASSWORD'] = '123456'
+
+app.config['BASIC_AUTH_FORCE'] = False
+basic_auth = BasicAuth(app)
 
 # 初始化客户端的 ips 对象
 ip_dict = {'8.8.8.8':'美国', '1.2.3.4':'美国'}
@@ -77,6 +83,7 @@ def create():
     return redirect(url_for('home'))
 
 @app.route('/initIP')
+@basic_auth.required
 def initIPRule():
     # 初始化 iptables rule
     start_runner()
