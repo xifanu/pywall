@@ -279,4 +279,8 @@ systemctl status pywall
 防火墙白名单规则初始化，执行： 
 ```
 bash /usr/pywall/ipt.sh
+
+# 定时初始化防火墙白名单规则 （使用crontab）
+
+0 5 * * 5,1 curl http://127.0.0.1:9950/initIP -u "admin:123456"
 ```

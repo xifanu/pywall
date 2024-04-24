@@ -21,6 +21,9 @@ basic_auth = BasicAuth(app)
 ip_dict = {'8.8.8.8':'美国', '1.2.3.4':'美国'}
 ips_dama = {}
 
+ipv6_pattern = r'^(?=\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$)(?:(?:25[0-5]|[12][0-4][0-9]|1[5-9][0-9]|[1-9]?[0-9])\.?){4}$|(?=^(?:[0-9a-f]{0,4}:){2,7}[0-9a-f]{0,4}$)(?![^:]*::.+::[^:]*$)(?:(?=.*::.*)|(?=\w+:\w+:\w+:\w+:\w+:\w+:\w+:\w+))(?:(?:^|:)(?:[0-9a-f]{4}|[1-9a-f][0-9a-f]{0,3})){0,8}(?:::(?:[0-9a-f]{1,4}(?:$|:)){0,6})?$'
+
+
 # 写入文件 ip_dict
 def wd_init_ips():
     with open('/usr/pywall/ip_dict','wb') as ips_file:
@@ -49,6 +52,7 @@ def ipdama(strip):
 def home():
     ips_dama.clear()
     userip = request.remote_addr
+    userip = userip.replace("::ffff:", "")
     country = ipcountry(userip)
     clientips_dict = read_ips()
     for cip, cipcountry in clientips_dict.items():
@@ -80,6 +84,19 @@ def create():
             clientips_dict[userip] = country
             wd_ips(clientips_dict)
             return redirect(url_for('home'))
+    if re.match(ipv6_pattern, userip):
+        # 判断 userip 是否存在于 clientips_dict
+        if userip in clientips_dict:
+            # 已存在
+            ip6tables_A(userip)
+            return redirect(url_for('home'))
+        else:
+            # 不存在
+            ip6tables_A(userip)
+            # 写入文件 ip_dict
+            clientips_dict[userip] = country
+            wd_ips(clientips_dict)
+            return redirect(url_for('home'))
     return redirect(url_for('home'))
 
 @app.route('/initIP')
@@ -101,9 +118,23 @@ def iptables_A( cip ):
         ret2 = subprocess.Popen('iptables -A INPUT -s %s -j ACCEPT' % cip, shell=True, stdout=subprocess.PIPE,stderr=subprocess.PIPE, encoding="utf-8")
         ret2.wait()
 
+
+def ip6tables_A( cip ):
+    mysh = 'ip6tables -C INPUT -s %s -j ACCEPT' % cip
+    ret1 = subprocess.Popen(mysh, shell=True, stdout=subprocess.PIPE,stderr=subprocess.PIPE, encoding="utf-8")
+    ret1.wait(3)
+    out1, err1 = ret1.communicate()
+    ipt_ret_info = '%s %s' % (out1, err1)
+    if "Bad rule" in ipt_ret_info:
+        ret2 = subprocess.Popen('ip6tables -A INPUT -s %s -j ACCEPT' % cip, shell=True, stdout=subprocess.PIPE,stderr=subprocess.PIPE, encoding="utf-8")
+        ret2.wait()
+
 def start_runner():
     print('....process iptables Rule....')
     init_iptables = 'bash /usr/pywall/ipt.sh'
+    ret1 = subprocess.Popen(init_iptables, shell=True, stdout=subprocess.PIPE,stderr=subprocess.PIPE, encoding="utf-8")
+    ret1.wait(3)
+    init_iptables = 'bash /usr/pywall/v6ipt.sh'
     ret1 = subprocess.Popen(init_iptables, shell=True, stdout=subprocess.PIPE,stderr=subprocess.PIPE, encoding="utf-8")
     ret1.wait(3)
 
@@ -118,5 +149,5 @@ def ipcountry(userip):
 if __name__ == '__main__':
     # start_runner()
     # app.run(debug=False,host='0.0.0.0',port=9950)
-    server = pywsgi.WSGIServer(('0.0.0.0', 9950), app)
+    server = pywsgi.WSGIServer(('::', 9950), app)
     server.serve_forever()
