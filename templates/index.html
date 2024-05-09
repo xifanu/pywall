@@ -33,16 +33,16 @@
 
                         <form action="/add" method="POST">
                             <div class="form-group">
-                                <input type="text" name="cadd" placeholder="ClientIP" class="form-control"  value="{{userip}}">
-                                <input disabled type="text" name="country" class="form-control"  value="国家：{{country}}">
+                                <input type="text" style="border-top-width: 0px;border-bottom-width: 0px;border-left-width: 0px;border-right-width: 0px;background-color: #303030;color: #bed2ff;" name="cadd" placeholder="ClientIP" class="form-control"  value="{{userip}}">
+                                <input disabled type="text" style="border-top-width: 0px;border-bottom-width: 0px;border-left-width: 0px;border-right-width: 0px;background-color: #000000;color: #bed2ff;" name="country" class="form-control"  value="国家：{{country}}">
                             </div>
                             <button type="submit" class="btn btn-primary btn-block">Add</button>
                         </form>
                     </div>
                     <div class="card-body" style="height:60vh;overflow:auto;" >
 
-                            {% for cip_dama, cipcountry in ips_dama.items() %}
-                                <p>{{cip_dama}}　　{{cipcountry}}</p>
+                            {% for clientip in clientips %}
+                                <p>{{clientip.ip}}　　{{clientip.memo}}</p>
                             
                             {% endfor %}
                         
