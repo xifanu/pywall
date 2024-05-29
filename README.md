@@ -11,7 +11,7 @@ python 简易防火墙管理程序：pywall
 
 ## Debian 10 11 安装 pywall 过程
 
-[CentOS 7 教程点我](#CentOS-7-安装-pywall-过程)
+[CentOS 7 教程点我](#CentOS-Stream-安装-pywall-过程)
 
 Debian 10、11 安装过程：
 
@@ -151,54 +151,31 @@ update-alternatives --config iptables
 # update-alternatives: using /usr/sbin/iptables-legacy to provide /usr/sbin/iptables (iptables) in manual mode
 ```
 
-## CentOS 7 安装 pywall 过程
+
+## CentOS Stream 安装 pywall 过程
+
+（暂不支持 ipv6）
+
+前提是：
+- 网卡名称：eth0
+- firewalld 已经安装并自启
+- SSH 端口为 22
 
 CentOS 7 安装 pywall 过程：
-
-### 处理防火墙
-
-```
-yum update
-```
-
-卸载 firewalld ，直接使用 iptables
-
-```
-systemctl disable firewalld
-systemctl stop firewalld
-systemctl mask firewalld
-systemctl disable firewalld.service
-```
-
-安装 iptables 及 iptables服务
-
-```
-yum install iptables -y
-yum install iptables-services -y
-systemctl enable iptables.service
-systemctl restart iptables.service
-```
 
 ### 安装 python3
 
 - 安装 python3 要求 3.6+
 
-（CentOS 7 编译安装 python3 很慢，这里不介绍了）
-
-CentOS 7 使用 rpm 包，直接安装 python3 ，需要启用较新的 repo 库：
-
 ```
-# 启用较新的 repo 库
-yum install https://repo.ius.io/ius-release-el$(rpm -E '%{rhel}').rpm
-
 # 安装 python3
-yum install python3 -y
+dnf install python3 -y
 
 # 升级 pip3
 pip3 install --upgrade pip
 ```
 
-验证安装情况
+验证安装情况，python 的版本大于 3.6 即可
 
 ```
 python3 -V
@@ -210,7 +187,7 @@ pip3 -V
 ### 安装本程序 pywall
 
 ```
-yum install git curl wget -y
+dnf install git curl wget -y
 
 cd /usr && git clone https://github.com/xifanu/pywall.git
 
@@ -229,8 +206,8 @@ pip3 install -r requirements.txt
 ### 临时启动
 
 ```
-# 临时启动验证，有 warning 警告没关系，程序正常运行即可。
-python3 app.py
+# 临时启动验证
+python3 centos_app.py
 ```
 
 ### 开机自启
@@ -250,7 +227,7 @@ After=syslog.target network.target nss-lookup.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/python3 /usr/pywall/app.py
+ExecStart=/usr/bin/python3 /usr/pywall/centos_app.py
 Restart=on-failure
 RestartSec=5s
 
@@ -274,13 +251,50 @@ systemctl restart pywall
 # 查看 pywall 运行状态
 systemctl status pywall
 ```
-　
-**附言**  
-防火墙白名单规则初始化，执行： 
+
+### 初始化 firewalld 防火墙规则
+
+以下命令根据实际情况灵活更改：
+
 ```
-bash /usr/pywall/ipt.sh
+# 放行 cloudflare IP
+firewall-cmd --permanent --zone=trusted --add-source=173.245.48.0/20
+firewall-cmd --permanent --zone=trusted --add-source=103.21.244.0/22
+firewall-cmd --permanent --zone=trusted --add-source=103.22.200.0/22
+firewall-cmd --permanent --zone=trusted --add-source=103.31.4.0/22
+firewall-cmd --permanent --zone=trusted --add-source=141.101.64.0/18
+firewall-cmd --permanent --zone=trusted --add-source=108.162.192.0/18
+firewall-cmd --permanent --zone=trusted --add-source=190.93.240.0/20
+firewall-cmd --permanent --zone=trusted --add-source=188.114.96.0/20
+firewall-cmd --permanent --zone=trusted --add-source=197.234.240.0/22
+firewall-cmd --permanent --zone=trusted --add-source=198.41.128.0/17
+firewall-cmd --permanent --zone=trusted --add-source=162.158.0.0/15
+firewall-cmd --permanent --zone=trusted --add-source=104.16.0.0/13
+firewall-cmd --permanent --zone=trusted --add-source=104.24.0.0/14
+firewall-cmd --permanent --zone=trusted --add-source=172.64.0.0/13
+firewall-cmd --permanent --zone=trusted --add-source=131.0.72.0/22
+# docker
+firewall-cmd --permanent --zone=trusted --add-source=172.17.0.1/24
+firewall-cmd --permanent --zone=trusted --add-source=172.17.0.2/24
+# 放行 22 SSH
+firewall-cmd --permanent --add-port=22/tcp
+# 放行 9950 Pywall
+firewall-cmd --permanent --add-port=9950/tcp
+firewall-cmd --reload
+firewall-cmd --set-default-zone=drop
+firewall-cmd --permanent --zone=drop --change-interface=eth0
+firewall-cmd --reload
+```
+　
+**其他说明**  
 
-# 定时初始化防火墙白名单规则 （使用crontab）
+pywall 添加的防火墙规则为临时规则，系统重启后失效（上面的初始化防火墙规则始终生效，不会因为系统重启而失效）；
 
-0 5 * * 5,1 curl http://127.0.0.1:9950/initIP -u "admin:123456"
+Linux 系统重启后，除了默认初始化的防火墙规则，通过 pywall 添加的规则会重置；
+
+建议配置 crontab 定时重启，重启系统是为了清理添加的防火墙规则，时间长了放行的IP太多了，会不安全；
+
+```
+# 定时重启 每周五和周一，早晨5点重启
+0 5 * * 5,1 reboot
 ```
