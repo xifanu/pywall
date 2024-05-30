@@ -147,6 +147,7 @@ def ipcountry(userip):
             return '未知'
 
 if __name__ == '__main__':
+    subprocess.Popen('/bin/cp -rf /usr/pywall/blankip /usr/pywall/ip_dict', shell=True, stdout=subprocess.PIPE,stderr=subprocess.PIPE, encoding="utf-8")
     # start_runner()
     # app.run(debug=False,host='0.0.0.0',port=9950)
     server = pywsgi.WSGIServer(('::', 9950), app)
