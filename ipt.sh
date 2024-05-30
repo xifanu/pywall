@@ -21,6 +21,16 @@ iptables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
 iptables -A INPUT -s 172.16.0.0/12 -j ACCEPT
 iptables -A INPUT -s 10.0.0.0/8 -j ACCEPT
 iptables -A INPUT -s 192.168.0.0/16 -j ACCEPT
+iptables -A INPUT -s 127.0.0.0/8 -j ACCEPT
+iptables -A INPUT -s 169.254.0.0/16 -j ACCEPT
+iptables -A INPUT -s 192.0.0.0/16 -j ACCEPT
+iptables -A INPUT -s 192.0.2.0/16 -j ACCEPT
+iptables -A INPUT -s 192.88.99.0/24 -j ACCEPT
+iptables -A INPUT -s 198.18.0.0/15 -j ACCEPT
+iptables -A INPUT -s 198.51.100.0/24 -j ACCEPT
+iptables -A INPUT -s 203.0.113.0/24 -j ACCEPT
+iptables -A INPUT -s 224.0.0.0/4 -j ACCEPT
+iptables -A INPUT -s 255.255.255.255/32 -j ACCEPT
 iptables -A INPUT -s 1.0.0.1 -j ACCEPT
 iptables -A INPUT -s 1.0.0.2 -j ACCEPT
 iptables -A INPUT -s 1.0.0.3 -j ACCEPT
