@@ -55,6 +55,12 @@ def home():
     userip = userip.replace("::ffff:", "")
     country = ipcountry(userip)
     clientips_dict = read_ips()
+    haveip = 0
+    for cip, cipcountry in clientips_dict.items():
+        if cip == userip:
+            haveip = 1
+            key_ip = '当前　' + userip
+            ips_dama[key_ip] = '已添加'
     for cip, cipcountry in clientips_dict.items():
         ipxx = ipdama(cip)
         ips_dama[ipxx] = cipcountry

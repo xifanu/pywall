@@ -42,8 +42,11 @@
                     <div class="card-body" style="height:60vh;overflow:auto;" >
 
                             {% for keyy,vall in ips_dama.items() %}
-                                <p>{{keyy}}　　{{vall}}</p>
-                            
+                                {% if vall == '已添加' %}
+                                    <p style="color: #43ac6a;">{{keyy}}　{{vall}}</p>
+                                {% else %}
+                                    <p>{{keyy}}　　{{vall}}</p>
+                                {% endif %}
                             {% endfor %}
                         
                     </div>
