@@ -289,7 +289,7 @@ firewall-cmd --permanent --add-port=44422/tcp
 # 放行 9950 Pywall
 firewall-cmd --permanent --add-port=9950/tcp
 firewall-cmd --reload
-firewall-cmd --set-default-zone=drop
+firewall-cmd --set-default-zone=trusted
 firewall-cmd --permanent --zone=drop --change-interface=eth0
 firewall-cmd --reload
 ```
