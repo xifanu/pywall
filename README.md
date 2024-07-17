@@ -276,8 +276,16 @@ firewall-cmd --permanent --zone=trusted --add-source=131.0.72.0/22
 # docker
 firewall-cmd --permanent --zone=trusted --add-source=172.17.0.1/24
 firewall-cmd --permanent --zone=trusted --add-source=172.17.0.2/24
-# 放行 22 SSH
+# 放行局域网
+firewall-cmd --permanent --zone=trusted --add-source=10.0.0.0/8
+firewall-cmd --permanent --zone=trusted --add-source=100.64.0.0/10
+firewall-cmd --permanent --zone=trusted --add-source=169.254.0.0/16
+firewall-cmd --permanent --zone=trusted --add-source=172.16.0.0/12
+firewall-cmd --permanent --zone=trusted --add-source=192.0.0.0/24
+firewall-cmd --permanent --zone=trusted --add-source=192.0.2.0/24
+# 放行 SSH
 firewall-cmd --permanent --add-port=22/tcp
+firewall-cmd --permanent --add-port=44422/tcp
 # 放行 9950 Pywall
 firewall-cmd --permanent --add-port=9950/tcp
 firewall-cmd --reload
