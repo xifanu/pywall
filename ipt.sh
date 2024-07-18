@@ -18,19 +18,11 @@ iptables -A INPUT -p tcp --dport 8000:9999 -j ACCEPT
 iptables -A INPUT -p tcp --dport 44422 -j ACCEPT
 iptables -A INPUT -i lo -j ACCEPT
 iptables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
-iptables -A INPUT -s 172.16.0.0/12 -j ACCEPT
-iptables -A INPUT -s 10.0.0.0/8 -j ACCEPT
-iptables -A INPUT -s 192.168.0.0/16 -j ACCEPT
-iptables -A INPUT -s 127.0.0.0/8 -j ACCEPT
-iptables -A INPUT -s 169.254.0.0/16 -j ACCEPT
 iptables -A INPUT -s 192.0.0.0/16 -j ACCEPT
 iptables -A INPUT -s 192.0.2.0/16 -j ACCEPT
-iptables -A INPUT -s 192.88.99.0/24 -j ACCEPT
-iptables -A INPUT -s 198.18.0.0/15 -j ACCEPT
 iptables -A INPUT -s 198.51.100.0/24 -j ACCEPT
 iptables -A INPUT -s 203.0.113.0/24 -j ACCEPT
 iptables -A INPUT -s 224.0.0.0/4 -j ACCEPT
-iptables -A INPUT -s 255.255.255.255/32 -j ACCEPT
 iptables -A INPUT -s 10.0.0.0/8 -j ACCEPT
 iptables -A INPUT -s 100.64.0.0/10 -j ACCEPT
 iptables -A INPUT -s 169.254.0.0/16 -j ACCEPT
@@ -53,16 +45,10 @@ if [[ "${ID}" == "centos" && ${VERSION_ID} -ge 7 ]]; then
     systemctl restart iptables
 elif [[ "${ID}" == "debian" && ${VERSION_ID} -ge 8 ]]; then
     echo -e "${OK} ${GreenBG} 当前系统为 Debian ${VERSION_ID} ${VERSION} ${Font}"
-    modprobe ip_tables
-    iptables-save
-    netfilter-persistent save
-    netfilter-persistent reload
+    iptables-save > /etc/iptables/rules.v4
 elif [[ "${ID}" == "ubuntu" && $(echo "${VERSION_ID}" | cut -d '.' -f1) -ge 16 ]]; then
     echo -e "${OK} ${GreenBG} 当前系统为 Ubuntu ${VERSION_ID} ${UBUNTU_CODENAME} ${Font}"
-    modprobe ip_tables
-    iptables-save
-    netfilter-persistent save
-    netfilter-persistent reload
+    iptables-save > /etc/iptables/rules.v4
 else
     echo -e "${Error} ${RedBG} 当前系统为 ${ID} ${VERSION_ID} 不在支持的系统列表内，安装中断 ${Font}"
     exit 1
